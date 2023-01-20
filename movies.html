@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>영화 리스트</title>
+    <style>
+      table {
+        border: 1px solid black;
+      }
+      td {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>영화 리스트 보기</h1>
+    <a href="register.html">영화 등록하러 가기</a>
+    <table>
+      <!-- colspan="5" -->
+      <thead>
+        <th>ID</th>
+        <th>제목</th>
+        <th>등록자</th>
+        <th>조회수</th>
+        <th>등록날짜</th>
+      </thead>
+
+      <tbody id="movies"></tbody>
+    </table>
+  </body>
+</html>
+<script>
+  fetch("http://localhost:3000/movies")
+    .then((response) => response.json())
+    .then((movies) => {
+      // const Moviesdev = (document.getElementById("movies").innerHTML =
+      //   movie.movie_title);
+      const html = movies.map((movie) => {
+        return `
+        <tr>
+          <td>${movie.id}</td>
+          <td><a href="movie.html?id=${movie.id}">${movie.movie_title}</td>
+          <td>${movie.name}</td>
+          <td>${movie.hit_count}</td>
+          <td>${movie.created_at}</td>
+        </tr> `;
+      });
+      // Moviesdev.append(temphtml);
+      console.log(html.join());
+      document.getElementById("movies").innerHTML = html.join("");
+    });
+</script>
