@@ -12,6 +12,10 @@
       td {
         border: 1px solid black;
       }
+      li {
+        display: inline-block;
+        padding: 7px;
+      }
     </style>
   </head>
 
@@ -30,15 +34,26 @@
 
       <tbody id="movies"></tbody>
     </table>
+    <ul id="pagination"></ul>
   </body>
 </html>
 <script>
-  fetch("http://localhost:3000/movies")
+  // 브라우저에서 쓴 query string을 js에서 쓸 수 있게 해주는 코드
+  const urlSearch = new URLSearchParams(location.search);
+  const page = urlSearch.get("page") || 1;
+
+  console.log(page);
+
+  fetch(`http://localhost:3000/movies?page=${page}`)
     .then((response) => response.json())
     .then((movies) => {
       // const Moviesdev = (document.getElementById("movies").innerHTML =
       //   movie.movie_title);
-      const html = movies.map((movie) => {
+      console.log(movies);
+      // {
+      //   pageInfo, movieList;
+      // }
+      const html = movies.moviesList.map((movie) => {
         return `
         <tr>
           <td>${movie.id}</td>
@@ -51,5 +66,12 @@
       // Moviesdev.append(temphtml);
       console.log(html.join());
       document.getElementById("movies").innerHTML = html.join("");
+
+      const lastPage = movies.pageInfo.lastPage;
+      const pages = [];
+      for (i = 1; i <= lastPage; i++) {
+        pages.push(`<li><a href=?page=${i}>${i}</a></li>`);
+        document.getElementById("pagination").innerHTML = pages.join("");
+      }
     });
 </script>
